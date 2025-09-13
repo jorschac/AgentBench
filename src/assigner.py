@@ -25,6 +25,7 @@ import sys
 from tqdm import tqdm
 from tqdm.contrib import DummyTqdmFile
 
+# Question: 这个装饰器是什么？现在 Python 有原生的装饰器？
 @contextlib.contextmanager
 def std_out_err_redirect_tqdm():
     orig_out_err = sys.stdout, sys.stderr
@@ -39,6 +40,7 @@ def std_out_err_redirect_tqdm():
         sys.stdout, sys.stderr = orig_out_err
 
 class Assigner:
+    # Question：这个 self 想必就是 Python 里大名鼎鼎的当前对象引用了，能作为参数传给类的构造器也是牛逼
     def __init__(self, config: AssignmentConfig, auto_retry: bool = True) -> None:
         """
         Logic:
@@ -46,6 +48,7 @@ class Assigner:
             2. Walk through all the folders in output folder, and remove the finished samples
             3. Create agents
         """
+        # Question：向我解释 Assginer 类下面所有的属性的意义
         self.auto_retry = auto_retry
         self.tqdm_ordered_by_agent = {}
         self.overall_tqdm = None

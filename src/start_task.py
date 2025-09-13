@@ -14,6 +14,7 @@ def _start_worker(name, port, controller, definition):
     if "docker" in conf and "image" in conf["docker"]:
         docker = conf["docker"]
         project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+        # Question：很像 Node 里的 child_process.spawn
         subprocess.Popen(
             [
                 "docker",
@@ -52,7 +53,7 @@ def _start_worker(name, port, controller, definition):
             ],
         )
 
-
+# Question: 这是在干啥？啥是 __name__ 变量？为啥要判断这个东西是不是等于 "__main__"？这是代码入口吗？就和 Java 的 main() 一样？
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -70,6 +71,7 @@ if __name__ == "__main__":
         help="name num_worker name num_worker ...",
     )
     parser.add_argument("--controller", "-l", dest="controller_addr", default="")
+    # Question: add_argument 的 dest，action，default 参数分别都是什么意思？
     parser.add_argument(
         "--auto-controller", "-a", dest="controller", action="store_true"
     )
@@ -77,13 +79,17 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    ## 获取测试任务列表 
+    # Question: config 是个啥?
     config = ConfigLoader().load_from(args.config)
 
     root = os.path.dirname(os.path.abspath(__file__))
 
     if args.controller:
+        # Question： 如果用户手动定义了 controller 就走这个逻辑?
         if "controller" in config:
             try:
+                # Question：哦牛批的，Python 里还有官方封装的 requests 库？
                 requests.get(config["controller"] + "/list_workers")
             except Exception as e:
                 print("Specified controller not responding, trying to start a new one")
@@ -98,6 +104,7 @@ if __name__ == "__main__":
                     ]
                 )
         else:
+            # Question：如果用户选择自动启动 controller 就走这个逻辑?
             subprocess.Popen(
                 ["python", "-m", "src.server.task_controller", "--port", "5000"]
             )
@@ -123,6 +130,7 @@ if __name__ == "__main__":
     if "start" in config.keys() and not args.start:
         for key, val in config.get("start", {}).items():
             for _ in range(val):
+                # Question：key 是什么？什么是 config["definition"]？
                 _start_worker(key, base_port, controller_addr, config["definition"])
                 base_port += 1
 
