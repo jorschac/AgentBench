@@ -72,6 +72,10 @@ if __name__ == "__main__":
     )
     parser.add_argument("--controller", "-l", dest="controller_addr", default="")
     # Question: add_argument 的 dest，action，default 参数分别都是什么意思？
+    # Answer: 
+    # dest  解析后写入到 args 的属性名。例如 dest="controller" → args.controller，
+    # action 指定参数遇见时的动作，例如 action="store_true" → args.controller 为 True，
+    # default 是参数的默认值
     parser.add_argument(
         "--auto-controller", "-a", dest="controller", action="store_true"
     )
@@ -131,6 +135,8 @@ if __name__ == "__main__":
         for key, val in config.get("start", {}).items():
             for _ in range(val):
                 # Question：key 是什么？什么是 config["definition"]？
+                # Answer: key 是任务名称 （如：dbbench-std），
+                # config["definition"] 是 worker 的“模板定义表”，形如 `definition[worker_name] = { docker: { image, command? }, ... }`
                 _start_worker(key, base_port, controller_addr, config["definition"])
                 base_port += 1
 
