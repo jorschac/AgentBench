@@ -54,6 +54,9 @@ def _start_worker(name, port, controller, definition):
         )
 
 # Question: 这是在干啥？啥是 __name__ 变量？为啥要判断这个东西是不是等于 "__main__"？这是代码入口吗？就和 Java 的 main() 一样？
+
+# Task1: 启动 controller 服务 （114-115）
+# Task2: 运行 worker  （137+）
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
